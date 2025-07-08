@@ -1,0 +1,9 @@
+psychopy
+mne
+pandas
+numpy
+scikit-learn
+pylsl
+djitellopy
+
+pyinstaller -i cc.ico -F ssvep_car.py lsl_received_data.py model.py
