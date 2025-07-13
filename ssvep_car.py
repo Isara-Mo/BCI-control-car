@@ -393,7 +393,7 @@ if __name__ == '__main__':
             text.setAutoDraw(True)
         waitOnFlip = False
         if keys.status == NOT_STARTED and tThisFlip >= 0.0 - frameTolerance:
-            keys.famreNStart = frameN
+            keys.frameNStart = frameN
             keys.tStart = t
             keys.tStartRefresh = tThisFlipGlobal
             win.timeOnFlip(keys, 'tStartRefresh')
