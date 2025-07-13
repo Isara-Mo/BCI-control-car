@@ -18,6 +18,12 @@ baud_rate = 9600
 #from BlueT import send_code
 from lsl_received_data import lsl_received
 from djitellopy import  tello
+
+# 自动巡航相关变量
+auto_cruise_mode = False  # 自动巡航模式状态
+auto_cruise_sequence = [2, 3, 4, 2, 3, 4, 2, 3, 4, 2, 3, 4]  # 自动巡航序列：前进、左转、右转、前进、左转、右转...
+auto_cruise_index = 0  # 当前执行到序列的第几个动作
+
 def decorator(func):
     def wrapper(*args, **kwargs):
         try:
@@ -26,6 +32,19 @@ def decorator(func):
         except Exception as e:
             print("执行函数：{}，出现异常：{}".format(func.__name__, e))
     return wrapper
+
+def start_auto_cruise():
+    """启动自动巡航模式"""
+    global auto_cruise_mode, auto_cruise_index
+    auto_cruise_mode = True
+    auto_cruise_index = 0
+    print("启动自动巡航模式")
+
+def stop_auto_cruise():
+    """停止自动巡航模式"""
+    global auto_cruise_mode
+    auto_cruise_mode = False
+    print("停止自动巡航模式")
 
 if __name__ == '__main__':
     multiprocessing.freeze_support()  #防止重复启动
@@ -791,16 +810,43 @@ if __name__ == '__main__':
 
         print("识别数据形状:{}".format(np_array.shape))
         # fbcca= model.FBCCA(Num_haimonics =5, fs=250, sample_len =1000, Num_fb=4, n_components=1)
+        
+        # 定义动作列表
+        order_lst = ['亮灯', '前进', '左转', '右转', '后退', '鸣笛']
+        #             1        2        3        4        5        6
+        
         result = model.fbcca_classify(np_array)
         print("result:", result, order_lst[result - 1])
 
+        # 检查是否为自动巡航模式
+        if auto_cruise_mode:
+            # 自动巡航模式下，直接修改result为序列中的下一个动作
+            if auto_cruise_index < len(auto_cruise_sequence):
+                result = int(auto_cruise_sequence[auto_cruise_index])
+                print(f"自动巡航执行动作: {result} - {order_lst[result - 1]}")
+                auto_cruise_index += 1
+                if auto_cruise_index >= len(auto_cruise_sequence):
+                    # 序列执行完毕，停止自动巡航
+                    stop_auto_cruise()
+                    print("自动巡航序列执行完毕")
+        elif result == 5:
+            # 检测到"后退"，启动自动巡航
+            start_auto_cruise()
+            print("启动自动巡航模式")
+            # 直接修改result为第一个自动巡航动作
+            if auto_cruise_index < len(auto_cruise_sequence):
+                result = int(auto_cruise_sequence[auto_cruise_index])
+                print(f"自动巡航执行动作: {result} - {order_lst[result - 1]}")
+                auto_cruise_index += 1
+
         # result += 1
-        order_lst = ['亮灯', '前进', '左转', '右转', '后退', '鸣笛']
-       # order_lst = ['上升', '前进', '起飞', '左转', '右转', '降落', '后退', '下降']
+        # order_lst = ['上升', '前进', '起飞', '左转', '右转', '降落', '后退', '下降']
         #代码默认为COM3可以根据实际改
         if result==1:
             ser.write(b'5')
         elif result==2:
+            ser.write(b'2')
+            time.sleep(0.3)
             ser.write(b'2')
         elif result==3:
             ser.write(b'3')
