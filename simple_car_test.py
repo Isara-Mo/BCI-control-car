@@ -20,7 +20,8 @@ class SimpleCarTest:
             ('左转', '3'),
             ('右转', '4'),
             ('后退', '1'),
-            ('鸣笛', '6')
+            ('鸣笛', '6'),
+            ('前进单步', '7')  # 新增前进单步
         ]
         
         # 记录的动作序列
@@ -110,6 +111,9 @@ class SimpleCarTest:
                 time.sleep(0.3)
                 self.ser.write(b'2')
                 print(f"执行: {name} ({code}) - 发送两次命令")
+            elif code == '7':  # 前进单步
+                self.ser.write(b'2')
+                print(f"执行: {name} ({code}) - 单步前进")
             else:
                 self.ser.write(code.encode())
                 print(f"执行: {name} ({code})")
@@ -183,6 +187,8 @@ class SimpleCarTest:
                     if code == 2:  # 前进
                         self.ser.write(b'2')
                         time.sleep(0.3)
+                        self.ser.write(b'2')
+                    elif code == 7:  # 前进单步
                         self.ser.write(b'2')
                     else:
                         self.ser.write(str(code).encode())
