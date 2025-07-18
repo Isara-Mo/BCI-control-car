@@ -21,7 +21,7 @@ from djitellopy import  tello
 
 # 自动巡航相关变量
 auto_cruise_mode = False  # 自动巡航模式状态
-auto_cruise_sequence = [2, 3, 4, 2, 3, 4, 2, 3, 4, 2, 3, 4]  # 自动巡航序列：前进、左转、右转、前进、左转、右转...
+auto_cruise_sequence = [2, 3, 4, 2, 3, 4, 2, 3, 4, 2, 3, 4]  # 1亮灯 2前进两步 3左转 4右转 5后退 6鸣笛 7前进1步
 auto_cruise_index = 0  # 当前执行到序列的第几个动作
 
 def decorator(func):
@@ -813,7 +813,7 @@ if __name__ == '__main__':
         
         # 定义动作列表
         order_lst = ['亮灯', '前进', '左转', '右转', '后退', '鸣笛']
-        #             1        2        3        4        5        6
+        #             1        2        3        4        5        6        7为前进1步
         
         result = model.fbcca_classify(np_array)
         print("result:", result, order_lst[result - 1])
@@ -856,6 +856,8 @@ if __name__ == '__main__':
             ser.write(b'1')
         elif result==6:
             ser.write(b'6')
+        elif result==7:
+            ser.write(b'2')
         # if result == 1:
         #     decorator(tello.move_up)(50)
         # elif result == 2:
