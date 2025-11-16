@@ -1,10 +1,18 @@
+<div id="language-switch" style="text-align: right; margin-bottom: 20px;">
+  <button id="en-btn" style="padding: 8px 15px; margin-right: 5px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">English</button>
+  <button id="zh-btn" style="padding: 8px 15px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">中文</button>
+</div>
+
+<!-- English Version -->
+<div id="en-content">
+
 # BCI-control-car
 
-# 脑机接口 SSVEP 控制无人机/小车系统
+## Brain-Computer Interface (BCI) SSVEP Control System for Drones/Cars
 
-## 项目简介
+### Project Overview
 
-本项目实现了基于 SSVEP（稳态视觉诱发电位）的脑机接口系统，用于通过脑电信号控制无人机或小车。系统集成了脑电信号采集、信号处理、特征提取与分类（FBCCA 算法）、以及对下位机（如无人机/小车）的指令控制。
+This project implements a brain-computer interface system based on SSVEP (Steady-State Visual Evoked Potential) for controlling drones or cars through EEG brain signals. The system integrates EEG signal acquisition, signal processing, feature extraction and classification (FBCCA algorithm), and command control for lower-level devices (such as drones/cars).
 
 ## 主要功能
 
